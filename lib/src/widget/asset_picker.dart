@@ -53,6 +53,7 @@ class AssetPicker<Asset, Path> extends StatefulWidget {
     PermissionRequestOption? permissionRequestOption,
     AssetPickerConfig pickerConfig = const AssetPickerConfig(),
     bool useRootNavigator = true,
+    Future<bool> Function(AssetEntity)? assetFileIsValid,
     AssetPickerPageRouteBuilder<List<AssetEntity>>? pageRouteBuilder,
   }) {
     return _pickerDelegate.pickAssets(
@@ -61,6 +62,7 @@ class AssetPicker<Asset, Path> extends StatefulWidget {
       pickerConfig: pickerConfig,
       permissionRequestOption: permissionRequestOption,
       useRootNavigator: useRootNavigator,
+      assetFileIsValid: assetFileIsValid,
       pageRouteBuilder: pageRouteBuilder,
     );
   }

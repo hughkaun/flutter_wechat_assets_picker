@@ -68,6 +68,7 @@ class AssetPickerDelegate {
     AssetPickerConfig pickerConfig = const AssetPickerConfig(),
     PermissionRequestOption? permissionRequestOption,
     bool useRootNavigator = true,
+    Future<bool> Function(AssetEntity asset)? assetFileIsValid,
     AssetPickerPageRouteBuilder<List<AssetEntity>>? pageRouteBuilder,
   }) async {
     permissionRequestOption ??= PermissionRequestOption(
@@ -120,6 +121,7 @@ class AssetPickerDelegate {
         locale: Localizations.maybeLocaleOf(context),
         shouldAutoplayPreview: pickerConfig.shouldAutoplayPreview,
         dragToSelect: pickerConfig.dragToSelect,
+        assetFileIsValid: assetFileIsValid,
       ),
     );
     final List<AssetEntity>? result = await Navigator.maybeOf(

@@ -843,6 +843,7 @@ class DefaultAssetPickerBuilderDelegate
     this.keepScrollOffset = false,
     this.shouldAutoplayPreview = false,
     this.dragToSelect,
+    this.assetFileIsValid,
   }) {
     // Add the listener if [keepScrollOffset] is true.
     if (keepScrollOffset) {
@@ -853,6 +854,10 @@ class DefaultAssetPickerBuilderDelegate
   /// [ChangeNotifier] for asset picker.
   /// 资源选择器状态保持
   final DefaultAssetPickerProvider provider;
+
+  /// [assetFileIsValid] for asset picker.
+  /// 是否有效且可选
+  Future<bool> Function(AssetEntity asset)? assetFileIsValid;
 
   /// Thumbnail size in the grid.
   /// 预览时网络的缩略图大小
@@ -908,6 +913,8 @@ class DefaultAssetPickerBuilderDelegate
 
   /// {@macro wechat_assets_picker.constants.AssetPickerConfig.dragToSelect}
   final bool? dragToSelect;
+
+  Map<AssetEntity, bool> assetEntityValidMap = {};
 
   /// [Duration] when triggering path switching.
   /// 切换路径时的动画时长
@@ -1613,8 +1620,32 @@ class DefaultAssetPickerBuilderDelegate
       children: <Widget>[
         builder,
         selectedBackdrop(context, currentIndex, asset),
-        if (!isWeChatMoment || asset.type != AssetType.video)
-          selectIndicator(context, currentIndex, asset),
+        if (assetFileIsValid != null && assetEntityValidMap[asset] == null)
+          FutureBuilder<bool>(
+            future: assetFileIsValid!.call(asset),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting ||
+                  snapshot.hasError) {
+                return Container();
+              } else if (snapshot.hasData && snapshot.data!) {
+                assetEntityValidMap[asset] = true;
+                return (!isWeChatMoment || asset.type != AssetType.video)
+                    ? selectIndicator(context, currentIndex, asset)
+                    : Container();
+              } else {
+                assetEntityValidMap[asset] = false;
+                return Container(
+                  color: Colors.black.withAlpha(180),
+                );
+              }
+            },
+          )
+        else if (!isWeChatMoment || asset.type != AssetType.video)
+          assetEntityValidMap[asset] == false
+              ? Container(
+                  color: Colors.black.withAlpha(180),
+                )
+              : selectIndicator(context, currentIndex, asset),
         itemBannedIndicator(context, asset),
       ],
     );
