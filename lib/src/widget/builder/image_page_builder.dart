@@ -12,6 +12,7 @@ import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:wechat_picker_library/wechat_picker_library.dart';
+import 'package:video_player_hdr/video_player_hdr.dart';
 
 import '../../constants/constants.dart';
 import '../../delegates/asset_picker_text_delegate.dart';
@@ -44,7 +45,7 @@ class ImagePageBuilder extends StatefulWidget {
 
 class _ImagePageBuilderState extends State<ImagePageBuilder> {
   bool _isLocallyAvailable = false;
-  VideoPlayerController? _livePhotoVideoController;
+  VideoPlayerHdrController? _livePhotoVideoController;
 
   bool get _isOriginal => widget.previewThumbnailSize == null;
 
@@ -79,7 +80,7 @@ class _ImagePageBuilderState extends State<ImagePageBuilder> {
     if (!mounted || file == null) {
       return;
     }
-    final VideoPlayerController c = VideoPlayerController.file(
+    final VideoPlayerHdrController c = VideoPlayerHdrController.file(
       file,
       videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
     );
@@ -165,7 +166,7 @@ class _LivePhotoWidget extends StatefulWidget {
     required this.textDelegate,
   });
 
-  final VideoPlayerController controller;
+  final VideoPlayerHdrController controller;
   final ExtendedImageState state;
   final BoxFit fit;
   final AssetPickerTextDelegate textDelegate;
@@ -295,7 +296,7 @@ class _LivePhotoWidgetState extends State<_LivePhotoWidget> {
                         child: SizedBox(
                           width: videoRect.width,
                           height: videoRect.height,
-                          child: VideoPlayer(_controller),
+                          child: VideoPlayerHdr(_controller),
                         ),
                       ),
                     ),

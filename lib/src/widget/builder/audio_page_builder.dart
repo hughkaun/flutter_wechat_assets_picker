@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wechat_picker_library/wechat_picker_library.dart';
+import 'package:video_player_hdr/video_player_hdr.dart';
 
 import '../../constants/constants.dart';
 import '../../internals/singleton.dart';
@@ -39,8 +40,8 @@ class _AudioPageBuilderState extends State<AudioPageBuilder> {
 
   /// Create a [VideoPlayerController] instance for the page builder state.
   /// 创建一个 [VideoPlayerController] 的实例
-  VideoPlayerController get controller => _controller!;
-  VideoPlayerController? _controller;
+  VideoPlayerHdrController get controller => _controller!;
+  VideoPlayerHdrController? _controller;
 
   /// Whether the audio loaded.
   /// 音频是否已经加载完成
@@ -97,7 +98,7 @@ class _AudioPageBuilderState extends State<AudioPageBuilder> {
     try {
       final String? url = await widget.asset.getMediaUrl();
       assetDuration = Duration(seconds: widget.asset.duration);
-      _controller = VideoPlayerController.networkUrl(Uri.parse(url!));
+      _controller = VideoPlayerHdrController.networkUrl(Uri.parse(url!));
       await controller.initialize();
       controller.addListener(audioPlayerListener);
       if (widget.shouldAutoplayPreview) {
